@@ -9,7 +9,7 @@ var DB *gorm.DB
 
 func main()  {
 
-	db,err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+	db,err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
@@ -17,7 +17,7 @@ func main()  {
 		panic(err)
 	}
 	DB = db
-	_, _ = insertUser("Jeffrey", "12345", 30)
-	_, _ = insertUser("David", "12345", 25)
+	//_, _ = insertUser("Jeffrey", "12345", 30)
+	//_, _ = insertUser("David", "12345", 25)
 
 }
