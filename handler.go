@@ -5,6 +5,19 @@ import (
 	"net/http"
 )
 
+func test(c *gin.Context) {
+	c.Set("aaa", 222222)
+	c.Next()
+}
+
+func test2(c *gin.Context) {
+	d, ok := c.Get("aaa")
+	c.JSON(http.StatusOK, gin.H{
+		"aaa":    d,
+		"status": ok,
+	})
+}
+
 func login(c *gin.Context) {
 	var req struct {
 		Username string `json:"username"`
@@ -13,7 +26,7 @@ func login(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 
-		response (c,"不正確參數")
+		response(c, "不正確參數")
 		return
 		//c.JSON(http.StatusBadRequest, gin.H{
 		//	"error": "不正確參數",
@@ -48,4 +61,21 @@ func login(c *gin.Context) {
 		"token": token,
 	})
 
+}
+
+func getUserInfo(c *gin.Context) {
+
+	id, _, ok := getSession(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{})
+		return
+	}
+
+	user, err := findUserByID(id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+	c.JSON(http.StatusOK, user)
 }

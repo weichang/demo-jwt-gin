@@ -22,9 +22,9 @@ func findUserByUsername(username string) (*User, error) {
 	return &user, nil
 }
 
-func findUserByID(id uint) (*User, error) {
-	var user User
-	if res := DB.Find(&user, id); res.Error != nil {
+func findUserByID(id uint) (*FindUser, error) {
+	var user FindUser
+	if res := DB.Select("id","username","age").Table("users").Find(&user, id); res.Error != nil {
 		return nil, res.Error
 	}
 	return &user, nil
