@@ -1,0 +1,38 @@
+definitions:
+  main.req:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:5688
+info:
+  contact:
+    name: Jeffrey
+  description: demo-jwt-gin swagger
+  title: demo-jwt-gin swagger
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: req
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/main.req'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: User Login
+      tags:
+      - User
+swagger: "2.0"

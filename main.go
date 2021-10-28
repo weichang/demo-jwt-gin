@@ -1,7 +1,11 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	docs "github.com/weichang/demo-jwt-gin/docs"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"net/http"
@@ -9,6 +13,16 @@ import (
 )
 
 var DB *gorm.DB
+
+// @title demo-jwt-gin swagger
+// @version 1.0
+// @description demo-jwt-gin swagger
+
+// @contact.name Jeffrey
+// @contact.url
+
+// @host localhost:5688
+// schemes http
 
 func main() {
 
@@ -24,14 +38,18 @@ func main() {
 	//_, _ = insertUser("David", "12345", 25)
 
 	r := gin.Default()
-	r.POST("/login", login)
+	r.Use(cors.Default())
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	v1 := r.Group("/api/v1")
+	{
+		// user login
+		v1.POST("/login", Login)
 
-	r.Use(test)
-	r.GET("/test2", test2)
-
-
-	r.Use(verifyToken)
-	r.GET("/info", getUserInfo)
+		// get user info
+		v1.Use(verifyToken)
+		v1.GET("/info", getUserInfo)
+	}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	if err := r.Run("localhost:5688"); err != nil {
 		panic(err)

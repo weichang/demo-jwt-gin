@@ -5,6 +5,12 @@ import (
 	"net/http"
 )
 
+
+type req struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func test(c *gin.Context) {
 	c.Set("aaa", 222222)
 	c.Next()
@@ -18,12 +24,19 @@ func test2(c *gin.Context) {
 	})
 }
 
-func login(c *gin.Context) {
-	var req struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
 
+//// @BasePath /api/v1
+
+// @Summary User Login
+// @Tags User
+// @version 1.0
+// @Accept  json
+// @Produce  json
+// @Param requestBody body req true "req"
+// @Success 200 string string 成功後返回的值
+// @Router /login [post]
+func Login(c *gin.Context) {
+	req := req{}
 	if err := c.ShouldBindJSON(&req); err != nil {
 
 		response(c, "不正確參數")
