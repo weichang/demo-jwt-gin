@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strings"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 var DB *gorm.DB
@@ -25,7 +26,6 @@ var DB *gorm.DB
 // schemes http
 
 func main() {
-
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)

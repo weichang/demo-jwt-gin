@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt"
+	"os"
 	"time"
 )
 
-var jwtKey = []byte("Pn1OhLGsrEluhlXMVsiu3JIItAPOh3Arzal9tFhD8aB2Mse4MNEjs0hG/F6TfHD4PQt1pg3MTLt58Z9+re9nldJf1BXsHd7XZ1auVEx0T5URAxDG7XhTE3iXGAnfp0loFndLPmSFsFDJeaLvakj8s2LIjbmUindq2fs3xkz44aBS+ckGfstiAS7gv8TCFg2J4cIC2hfacQkRZ96OXTwU6iv3mNIJ7J41HdUDow==")
+var jwtKey = []byte(os.Getenv("JWT_KEY"))
 
 type authClaims struct {
 	jwt.StandardClaims
