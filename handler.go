@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
+	"github.com/weichang/demo-jwt-gin/middleware"
 	"net/http"
 )
 
@@ -69,6 +71,10 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
+	middleware.Logger().WithFields(logrus.Fields{
+		"token": token,
+	}).Info("User login token", "Info")
 
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,

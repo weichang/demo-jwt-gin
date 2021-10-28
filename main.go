@@ -6,6 +6,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	docs "github.com/weichang/demo-jwt-gin/docs"
+	"github.com/weichang/demo-jwt-gin/middleware"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"net/http"
@@ -38,6 +39,10 @@ func main() {
 	//_, _ = insertUser("David", "12345", 25)
 
 	r := gin.Default()
+
+	//log
+	r.Use(middleware.LoggerToFile())
+
 	r.Use(cors.Default())
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	v1 := r.Group("/api/v1")
