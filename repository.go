@@ -1,7 +1,9 @@
 package main
 
-func insertUser(username string, password string, age uint) (*User, error) {
-	user := User{
+import "github.com/weichang/demo-jwt-gin/model"
+
+func insertUser(username string, password string, age uint) (*model.User, error) {
+	user := model.User{
 		Username: username,
 		Password: password,
 		Age:      age,
@@ -13,8 +15,8 @@ func insertUser(username string, password string, age uint) (*User, error) {
 	return &user, nil
 }
 
-func findUserByUsername(username string) (*User, error) {
-	var user User
+func findUserByUsername(username string) (*model.User, error) {
+	var user model.User
 
 	if res := DB.Where("username = ?", username).Find(&user); res.Error != nil {
 		return nil, res.Error
@@ -22,8 +24,8 @@ func findUserByUsername(username string) (*User, error) {
 	return &user, nil
 }
 
-func findUserByID(id uint) (*FindUser, error) {
-	var user FindUser
+func findUserByID(id uint) (*model.FindUser, error) {
+	var user model.FindUser
 	if res := DB.Select("id","username","age").Table("users").Find(&user, id); res.Error != nil {
 		return nil, res.Error
 	}

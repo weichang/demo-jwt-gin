@@ -64,7 +64,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := generateToken(*user)
+	token, err := middleware.GenToken(*user)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": err.Error(),

@@ -1,4 +1,4 @@
-package main
+package middleware
 
 import (
 	"errors"
@@ -9,24 +9,27 @@ import (
 	"time"
 )
 
-var jwtKey = []byte(os.Getenv("JWT_KEY"))
+var SecretKey = []byte(os.Getenv("JWT_KEY"))
 
 type authClaims struct {
+	UserID uint `json:"userid"`
 	jwt.StandardClaims
-	UserID uint `json:"user_id"`
 }
 
-func generateToken(user model.User) (string, error) {
+func GenToken(user model.User) (string, error) {
 	expiresAt := time.Now().Add(24 * time.Hour).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, authClaims{
+	c := authClaims{
+		UserID: user.ID,
 		StandardClaims: jwt.StandardClaims{
 			Subject:   user.Username,
 			ExpiresAt: expiresAt,
 		},
-		UserID: user.ID,
-	})
+	}
+	// Choose specific algorithm
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 
-	tokenString, err := token.SignedString(jwtKey)
+	// Choose specific Signature
+	tokenString, err := token.SignedString(SecretKey)
 
 	if err != nil {
 		return "", err
@@ -34,14 +37,14 @@ func generateToken(user model.User) (string, error) {
 	return tokenString, nil
 }
 
-func validateToken(tokenString string) (uint, string, error) {
+func ValidateToken(tokenString string) (uint, string, error) {
 	var claims authClaims
 
 	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return jwtKey, nil
+		return SecretKey, nil
 	})
 
 	if err != nil {
@@ -55,4 +58,5 @@ func validateToken(tokenString string) (uint, string, error) {
 	id := claims.UserID
 	username := claims.Subject
 	return id, username, nil
+
 }

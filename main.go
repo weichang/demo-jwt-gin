@@ -3,15 +3,16 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/joho/godotenv/autoload"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	docs "github.com/weichang/demo-jwt-gin/docs"
 	"github.com/weichang/demo-jwt-gin/middleware"
+	"github.com/weichang/demo-jwt-gin/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"net/http"
 	"strings"
-	_ "github.com/joho/godotenv/autoload"
 )
 
 var DB *gorm.DB
@@ -31,7 +32,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := db.AutoMigrate(&User{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}); err != nil {
 		panic(err)
 	}
 	DB = db
